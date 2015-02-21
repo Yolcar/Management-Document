@@ -1,0 +1,25 @@
+
+.sidebar-nav {
+    display: block;
+    float: left;
+    list-style: none;
+    padding: 0;
+}
+#page-content-wrapper {
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+}
+#wrapper.active {
+    padding-left: 150px;
+}
+
+#wrapper.active #sidebar-wrapper {
+    left: 150px;
+}
+
+.sidebar-nav li {
+    line-height: 40px;
+    text-indent: 20px;
+}
