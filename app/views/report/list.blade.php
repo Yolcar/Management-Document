@@ -16,7 +16,7 @@
                     plotShadow: false
                 },
                 title: {
-                    text: 'Documentos del Año '+year+' segun su Estado'
+                    text: 'Documentos segun su estado'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'

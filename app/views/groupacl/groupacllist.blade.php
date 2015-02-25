@@ -49,7 +49,7 @@
                 <td>
                     <div id="yes" style="float:left; padding-right:10px">
                         {{ Form::open(['route' => ['groupacl.edit', $groupacl->id ], 'method' => 'GET']) }}
-                        {{ Form::button('Editar', ['type' => 'submit', 'class' => 'btn btn-custom-disable','data-trigger'=>"hover", 'data-toggle'=>"popover", 'data-content'=>"Permite Editar los grupos que ya han sido creados.", 'data-original-title'=>"Editar Grupo", 'data-target'=>'#editGroup'.$groupacl->id, 'data-id'=>$groupacl->id]) }}
+                        {{ Form::button('Administrar', ['type' => 'submit', 'class' => 'btn btn-custom-disable','data-trigger'=>"hover", 'data-toggle'=>"popover", 'data-content'=>"Permite Editar los grupos que ya han sido creados.", 'data-original-title'=>"Editar Grupo", 'data-target'=>'#editGroup'.$groupacl->id, 'data-id'=>$groupacl->id]) }}
                         {{ Form::close() }}
                     </div> <!-- end yes -->
                     @if($groupacl->id!=1)

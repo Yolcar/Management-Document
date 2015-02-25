@@ -1,6 +1,7 @@
 <?php
 
 use \Illuminate\Database\Eloquent\ModelNotFoundException;
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader
@@ -60,6 +61,12 @@ App::error(function(ModelNotFoundException $e)
 {
 	return Response::view('errors.missing', array(), 404);
 });
+
+App::error(function(NotFoundHttpException  $e)
+{
+    return Response::view('errors.missing', array(), 404);
+});
+
 
 /*
 |--------------------------------------------------------------------------
