@@ -33,14 +33,8 @@
         </div>
     </div>
 
-    <h3>Se encontraron {{$tasks->getTotal()}} Tareas.</h3>
-
-
-
-
-    @include('task.filters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Nombre</th>

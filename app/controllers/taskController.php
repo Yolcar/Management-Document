@@ -23,13 +23,7 @@ class taskController extends \BaseController {
 	 */
 	public function index()
 	{
-		if(Input::has('search'))
-		{
-			$tasks = $this->taskRepo->getModel()->search(Input::get('search'))->where('available','=',1)->paginate(20);
-		}
-		else{
-			$tasks = $this->taskRepo->getModel()->where('available','=',1)->paginate(20);
-		}
+        $tasks = $this->taskRepo->getModel()->where('available','=',1)->paginate(20);
 		return View::make('task.list',compact('tasks'));
 	}
 
@@ -65,13 +59,7 @@ class taskController extends \BaseController {
 
     public function activation()
     {
-        if(Input::has('search'))
-        {
-            $tasks= $this->taskRepo->getModel()->search(Input::get('search'))->where('available','=',0);
-        }
-        else{
-            $tasks= $this->taskRepo->getModel()->where('available','=',0)->paginate(20);
-        }
+        $tasks= $this->taskRepo->getModel()->where('available','=',0)->paginate(20);
         return View::make('task.activation',compact('tasks'));
     }
 

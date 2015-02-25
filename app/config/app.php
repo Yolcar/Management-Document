@@ -125,8 +125,8 @@ return array(
 		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Innaco\Components\FieldServiceProvider',
         'Barryvdh\Snappy\ServiceProvider',
-        'Maatwebsite\Excel\ExcelServiceProvider',
         'Intervention\Image\ImageServiceProvider',
+        //'Barryvdh\Debugbar\ServiceProvider',
 	),
 
 	/*

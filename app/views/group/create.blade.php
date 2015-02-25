@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h1 class="page-header">Nuevo Grupo</h1>
+            <h1 class="page-header">Nuevo Grupo de Trabajo</h1>
 
             {{ Form::open(['route' => 'group.store', 'method' => 'POST', 'role' => 'form']) }}
 

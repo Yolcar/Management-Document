@@ -1,22 +1,6 @@
 @extends('layout')
 @extends('navbar')
 @extends('sidebar')
-
-@section('head')
-    <script>
-        $(function() {
-            // setting up the datepicker
-            $('.input-group.date').datepicker({
-                format: "dd-mm-yyyy",
-                startDate: "now",
-                todayBtn: "linked",
-                language: "es",
-                orientation: "top auto",
-                autoclose: true
-            });
-        });
-    </script>
-@endsection
 @section('body')
 
     <h1 class="page-header">Nuevo Documento</h1>
@@ -32,7 +16,7 @@
             {{ Field::input('text','name',null,['id' => 'name']) }}
         </div>
         <div class="input-group date">
-            {{ Field::input('datepicker','execute_date',null,['readonly']) }}
+            {{Field::input('datepicker','execute_date',null,['class'=> "datepicker", 'data-provide'=>"datepicker",'data-date-language' => "es",'data-date-start-date'=>"now()", 'data-date-format' => "dd-mm-yyyy" ])}}
         </div>
 
     </div>

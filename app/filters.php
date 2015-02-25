@@ -72,6 +72,20 @@ Route::filter('isManagement', function()
     }
 });
 
+Route::filter('haveGroupsAcl', function($route, $request, $value)
+{
+    $groupsAcl = Auth::getUser()->groupacls;
+    $flag = false;
+    foreach($groupsAcl as $groupAcl){
+        if(\Innaco\Entities\Groupacl::find($groupAcl->id)->hasModule($value)){
+            $flag = true;
+        }
+    }
+    if(!$flag){
+        return Response::view('errors.missing', array(), 404);
+    }
+});
+
 Route::filter('auth.basic', function()
 {
 	return Auth::basic();

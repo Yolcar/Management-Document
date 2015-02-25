@@ -1,25 +1,26 @@
 <?php namespace Innaco\Entities;
 
-use Nicolaslopezj\Searchable\SearchableTrait;
-
+/**
+ * Innaco\Entities\Group
+ *
+ * @property integer $id 
+ * @property string $name 
+ * @property boolean $available 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\User[] $users 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\StepDocument[] $stepDocuments 
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereAvailable($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereUpdatedAt($value)
+ */
 class Group extends \Eloquent {
-
-	use SearchableTrait;
-
-	/**
-	 * Searchable rules.
-	 *
-	 * @var array
-	 */
-	protected $searchable = [
-		'columns' => [
-			'name' => 10,
-		],
-	];
 
 	protected $fillable = ['name','available'];
 
-    public function groups()
+    public function users()
     {
         return $this->belongsToMany('Innaco\Entities\User');
     }

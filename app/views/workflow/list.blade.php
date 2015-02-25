@@ -6,9 +6,8 @@
 	<div class="col-md-8">
 		<h1 class="page-header">Tracking</h1>
 
-		@include('workflow.filters')
-		<div class="table-responsive">
-			<table class="table table-hover">
+        <br><br><br>
+        <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
 				<thead>
 				<tr>
 					<th>Tipo de Documento</th>
@@ -29,8 +28,7 @@
 					</tr>
 				@endforeach
 				</tbody>
-			</table>
-		</div>
-	</div>
+        </table>
+    </div>
 
 @endsection

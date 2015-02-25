@@ -4,19 +4,44 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
+/**
+ * Innaco\Entities\User
+ *
+ * @property integer $id 
+ * @property string $full_name 
+ * @property mixed $sign 
+ * @property string $email 
+ * @property string $cedula 
+ * @property string $password 
+ * @property string $last_session 
+ * @property boolean $available 
+ * @property string $remember_token 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\Groupacl[] $groupacls 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\Group[] $groups 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\Workflow[] $workflow 
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereFullName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereSign($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereCedula($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereLastSession($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereAvailable($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\User whereUpdatedAt($value)
+ */
 class User extends \Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
-    use SearchableTrait;
 
-    protected $searchable = [
-        'columns' => [
-            'full_name' => 10,
-            'email' => 10
-        ],
-    ];
+    public function groupacls()
+    {
+        return $this->belongsToMany('Innaco\Entities\Groupacl');
+    }
 
     public function groups()
     {
@@ -28,6 +53,11 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         return in_array($check, array_fetch($this->groups->toArray(), 'name'));
     }
 
+    public function hasGroupAcl($check)
+    {
+        return in_array($check, array_fetch($this->groupacls->toArray(), 'name'));
+    }
+
     public function setPasswordAttribute($value)
     {
         if ( ! empty ($value))
@@ -36,7 +66,7 @@ class User extends \Eloquent implements UserInterface, RemindableInterface {
         }
     }
 
-    protected $fillable = ['full_name','email','password','available'];
+    protected $fillable = ['full_name','email','cedula','password','available'];
 
 	/**
 	 * The database table used by the model.

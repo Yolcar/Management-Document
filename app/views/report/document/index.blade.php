@@ -2,10 +2,6 @@
 @extends('sidebar')
 @extends('navbar')
 @section('head')
-    {{ HTML::style('css/dataTables.bootstrap.css') }}
-    {{ HTML::script('js/jquery.dataTables.min.js') }}
-    {{ HTML::script('js/dataTables.bootstrap.js') }}
-    {{ HTML::script('js/dataTablesConfig.js') }}
     <script>
         function fillable(campo){
             var table = $('table.display.'+campo).dataTable();
@@ -36,7 +32,7 @@
     <div class="col-md-12">{{Field::input('text','NameTypeDocument',null,['readonly', 'id' => 'byNameTypeDocument', 'data-toggle' => "modal", 'data-target' => "#myModalTypeDocument"])}}</div>
     @include('report.document.byTypeDocument')
     <div class="col-md-12"><div class="col-md-6">{{Field::input('datepicker','CreateDateBegin',null,['class'=> "datepicker", 'data-provide'=>"datepicker", 'data-date-end-date'=>"now()",'data-date-language' => "es",'data-date-start-date'=>"-2y", 'data-date-format' => "dd-mm-yyyy"])}}</div><div class="col-md-6">{{Field::input('datepicker','CreateDateEnd',null,['class'=> "datepicker", 'data-provide'=>"datepicker", 'data-date-end-date'=>"now()",'data-date-language' => "es",'data-date-start-date'=>"-2y", 'data-date-format' => "dd-mm-yyyy" ])}}</div></div>
-    <div class="col-md-12"><div class="col-md-6">{{Field::input('datepicker','ExecuteDateBegin',null,['class'=> "datepicker", 'data-provide'=>"datepicker", 'data-date-end-date'=>"now()",'data-date-language' => "es",'data-date-start-date'=>"-2y" ])}}</div><div class="col-md-6">{{Field::input('datepicker','ExecuteDateEnd',null,['class'=> "datepicker", 'data-provide'=>"datepicker",'data-date-language' => "es",'data-date-start-date'=>"now()" ])}}</div></div>
+    <div class="col-md-12"><div class="col-md-6">{{Field::input('datepicker','ExecuteDateBegin',null,['class'=> "datepicker", 'data-provide'=>"datepicker", 'data-date-end-date'=>"now()",'data-date-language' => "es",'data-date-start-date'=>"-2y", 'data-date-format' => "dd-mm-yyyy" ])}}</div><div class="col-md-6">{{Field::input('datepicker','ExecuteDateEnd',null,['class'=> "datepicker", 'data-provide'=>"datepicker",'data-date-language' => "es",'data-date-start-date'=>"now()", 'data-date-format' => "dd-mm-yyyy" ])}}</div></div>
     <div class="col-md-12">{{ Form::label('byState','Estado') }}{{Field::select('State',$states)}}</div>
     <div class="col-md-12">{{Field::input('text','CreatedUser',null,['readonly', 'id' => 'byCreatedUser', 'data-toggle' => "modal", 'data-target' => "#myModalCreatedUser"])}}</div>
     @include('report.document.byCreatedUser')

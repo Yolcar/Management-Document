@@ -26,6 +26,11 @@
 	{{ HTML::script('js/locales/bootstrap-datepicker.es.js') }}
     {{ HTML::script('js/sidebar.js') }}
 
+    {{ HTML::style('css/dataTables.bootstrap.css') }}
+    {{ HTML::script('js/jquery.dataTables.min.js') }}
+    {{ HTML::script('js/dataTables.bootstrap.js') }}
+    {{ HTML::script('js/dataTablesConfig.js') }}
+
     <script>
         $(function (){
             $('[data-toggle="popover"]').popover({

@@ -38,13 +38,7 @@ class templateController extends \BaseController {
 	 */
 	public function index()
 	{
-		if(Input::has('search'))
-		{
-			$templates = $this->templateRepo->getModel()->where('name','LIKE','%'.Input::get('search').'%')->where('available','=',1)->paginate(20);
-		}
-		else{
-			$templates = $this->templateRepo->getModel()->where('available','=',1)->paginate(20);
-		}
+        $templates = $this->templateRepo->getModel()->where('available','=',1)->paginate(20);
 		return View::make('template.list',compact('templates'));
 	}
 
@@ -56,13 +50,7 @@ class templateController extends \BaseController {
 	 */
 	public function create()
 	{
-		if(Input::has('search'))
-		{
-			$typeDocuments = $this->typeDocumentRepo->getModel()->search(Input::get('search'))->paginate(5);
-		}
-		else{
-			$typeDocuments= $this->typeDocumentRepo->getModel()->paginate(5);
-		}
+        $typeDocuments= $this->typeDocumentRepo->getModel()->paginate(5);
 		return View::make('template.create',compact('typeDocuments'));
 	}
 
@@ -80,7 +68,7 @@ class templateController extends \BaseController {
 		$manager = new TemplateManager($template, $data);
 		$manager->save();
 
-		return Redirect::route('template.index');
+		return Redirect::route('steps', $template->id);
 	}
 
 
@@ -111,7 +99,7 @@ class templateController extends \BaseController {
         }
 
 		if($template->available == 1){
-			$steps = $this->taskRepo->findAll();
+			$steps = $this->taskRepo->getModel()->where('available','=',1)->get();
 			$groups = DB::table('groups')->orderBy('id','asc')->lists('name','id');
 			$stepDocuments = $this->stepDocumentRepo->getModel()->where('templates_id','=',$id)->where('available','=',1)->get();
 			return View::make('stepdocument.step',compact('steps','groups','stepDocuments'))->with('template',$template)->with('totalSteps',$totalSteps);
@@ -122,13 +110,7 @@ class templateController extends \BaseController {
 
 	public function activation()
 	{
-		if(Input::has('search'))
-		{
-			$templates = $this->templateRepo->getModel()->search(Input::get('search'))->where('available','=',0);
-		}
-		else{
-			$templates = $this->templateRepo->getModel()->where('available','=',0)->paginate(20);
-		}
+        $templates = $this->templateRepo->getModel()->where('available','=',0)->paginate(20);
 		return View::make('template.activation',compact('templates'));
 	}
 
@@ -152,6 +134,7 @@ class templateController extends \BaseController {
 		$groups_id = Input::get('groups_id');
 		$tasks_id = Input::get('tasks_id');
 		$order = Input::get('order');
+        $edit = Input::get('edit');
 
 		$stepDocument = $this->stepDocumentRepo->getModel()->where('templates_id', '=' ,$template_id)->get();
 
@@ -167,7 +150,13 @@ class templateController extends \BaseController {
 
 		foreach ($tasks_id as $key => $n) {
 			if($groups_id[$key] !=NULL AND $order[$key]!=NULL){
-				$arrData = array('templates_id' => $template_id, 'tasks_id' => $tasks_id[$key], 'groups_id' => $groups_id[$key], 'order' => $order[$key],'available' => 1);
+                if(array_key_exists($n,$edit)){
+                    if($edit[$n] == 1){
+                        $arrData = array('templates_id' => $template_id, 'tasks_id' => $tasks_id[$key], 'groups_id' => $groups_id[$key], 'order' => $order[$key],'available' => 1,'edit' => 1);
+                    }
+                }else{
+                    $arrData = array('templates_id' => $template_id, 'tasks_id' => $tasks_id[$key], 'groups_id' => $groups_id[$key], 'order' => $order[$key],'available' => 1, 'edit' => 0);
+                }
 				$stepDocument = $this->stepDocumentRepo->newStepDocument();
 				$manager = new StepDocumentManager($stepDocument, $arrData);
 				$manager->save();

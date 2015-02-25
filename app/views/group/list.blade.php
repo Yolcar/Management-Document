@@ -13,9 +13,9 @@
         });
     </script>
 
-    <h1 class="page-header">Grupos</h1>
+    <h1 class="page-header">Grupos de Trabajo</h1>
     <div class="col-lg-12">
-        <div class="col-lg-3"><p><a id="example" class="btn btn-custom-create" href="{{Route('group.create')}}" data-trigger="hover" data-toggle="popover" data-content="Permite crear nuevos Grupos." data-original-title="Crear Tarea">Crear Grupo</a></p></div>
+        <div class="col-lg-3"><p><a id="example" class="btn btn-custom-create" href="{{Route('group.create')}}" data-trigger="hover" data-toggle="popover" data-content="Permite crear nuevos Grupos de trabajo." data-original-title="Crear Grupo de Trabajo">Crear Grupo de Trabajo</a></p></div>
         <div class="col-lg-3"><a class="btn btn-custom-active" href="{{Route('groupActivation')}}" data-toggle="popover" data-content="Permite reactivar los grupos que han sido desactivados" data-original-title="Re-activar">Re-Activar</a></div>
         <div class="col-lg-5"></div>
         <div class="col-lg-1"><a class="btn btn-custom-active" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-question-sign"></span> <strong>Ayuda</strong></a></div>
@@ -41,12 +41,8 @@
             </div>
         </div>
     </div>
-
-    <h3>Se encontraron {{$groups->getTotal()}} grupos registrados.</h3>
-
-    @include('group.filters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Nombre</th>

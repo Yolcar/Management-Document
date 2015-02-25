@@ -5,11 +5,8 @@
 @section('body')
     <h1 class="page-header">Tipos de Documentos Desactivados</h1>
 
-    <h3>Se encontraron {{$typedocuments->getTotal()}} tipos de documentos desactivados.</h3>
-
-    @include('typeDocument.activeFilters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th width="40%">Nombre</th>

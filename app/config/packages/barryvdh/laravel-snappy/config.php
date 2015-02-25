@@ -6,9 +6,9 @@ return array(
     'pdf' => array(
         'enabled' => true,
          //Linux
-		//'binary' => base_path('vendor/h4cc/wkhtmltopdf-i386/bin/wkhtmltopdf-i386'),
+		'binary' => base_path('vendor/h4cc/wkhtmltopdf-i386/bin/wkhtmltopdf-i386'),
 		//Windows
-		'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"',
+		//'binary' => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"',
         'options' => array(
             'page-size' => 'letter',
             'margin-top' => '10',

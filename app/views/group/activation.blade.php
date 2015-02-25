@@ -5,11 +5,8 @@
 @section('body')
     <h1 class="page-header">Grupos Desactivados</h1>
 
-    <h3>Se encontraron {{$groups->getTotal()}} Grupos Desactivados.</h3>
-
-    @include('group.activeFilters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th width="40%">Nombre</th>

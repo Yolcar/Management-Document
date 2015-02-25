@@ -35,11 +35,8 @@
         </div>
     </div>
 
-    <h3>Se encontraron {{$templates->getTotal()}} Plantillas.</h3>
-
-    @include('template.filters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th width="20%">Tipo Documento</th>

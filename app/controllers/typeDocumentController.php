@@ -22,13 +22,7 @@ class typeDocumentController extends \BaseController {
 	 */
 	public function index()
 	{
-		if(Input::has('search'))
-		{
-			$typeDocuments = $this->typeDocumentRepo->getModel()->search(Input::get('search'))->where('available','=',1)->get();
-		}
-		else{
-			$typeDocuments = $this->typeDocumentRepo->getModel()->where('available','=',1)->paginate(20);
-		}
+        $typeDocuments = $this->typeDocumentRepo->getModel()->where('available','=',1)->paginate(20);
 		return View::make('typeDocument.list',compact('typeDocuments'));
 	}
 
@@ -65,13 +59,7 @@ class typeDocumentController extends \BaseController {
 
     public function activation()
     {
-        if(Input::has('search'))
-        {
-            $typedocuments= $this->typeDocumentRepo->getModel()->search(Input::get('search'))->where('available','=',0);
-        }
-        else{
-            $typedocuments= $this->typeDocumentRepo->getModel()->where('available','=',0)->paginate(20);
-        }
+        $typedocuments= $this->typeDocumentRepo->getModel()->where('available','=',0)->paginate(20);
         return View::make('typeDocument.activation',compact('typedocuments'));
     }
 

@@ -4,18 +4,21 @@ use Innaco\Repositories\UserRepo;
 use Innaco\Repositories\WorkflowRepo;
 use Innaco\Repositories\GroupRepo;
 use Innaco\Managers\UserManager;
+use Innaco\Repositories\GroupaclRepo;
 
 class userController extends \BaseController {
 
     protected $userRepo;
     protected $workflowRepo;
     protected $groupRepo;
+    protected $groupaclRepo;
 
-    public function __construct(UserRepo $userRepo, WorkflowRepo $workflowRepo, GroupRepo $groupRepo)
+    public function __construct(UserRepo $userRepo, WorkflowRepo $workflowRepo, GroupRepo $groupRepo,GroupaclRepo $groupaclRepo)
     {
         $this->userRepo = $userRepo;
         $this->workflowRepo = $workflowRepo;
         $this->groupRepo = $groupRepo;
+        $this->groupaclRepo = $groupaclRepo;
     }
 
 	/**
@@ -26,13 +29,7 @@ class userController extends \BaseController {
 	 */
 	public function index()
 	{
-        if(Input::has('search'))
-        {
-            $users = $this->userRepo->getModel()->search(Input::get('search'))->where('available','=',1)->paginate(20);
-        }
-        else{
-            $users = $this->userRepo->getModel()->where('available','=',1)->paginate(20);
-        }
+        $users = $this->userRepo->getModel()->where('available','=',1)->paginate(20);
         return View::make('user.list',compact('users'));
 	}
 
@@ -40,13 +37,7 @@ class userController extends \BaseController {
 
     public function activation()
     {
-        if(Input::has('search'))
-        {
-            $users= $this->userRepo->getModel()->search(Input::get('search'))->where('available','=',0);
-        }
-        else{
-            $users= $this->userRepo->getModel()->where('available','=',0)->paginate(20);
-        }
+        $users= $this->userRepo->getModel()->where('available','=',0)->paginate(20);
         return View::make('user.activation',compact('users'));
     }
 
@@ -84,19 +75,7 @@ class userController extends \BaseController {
         $manager = new UserManager($user, $data);
         $manager->save();
 
-        return Redirect::route('user.index');
-	}
-
-	/**
-	 * Display the specified resource.
-	 * GET /user/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
+        return Redirect::route('user.edit',$user->id);
 	}
 
 	/**
@@ -110,7 +89,8 @@ class userController extends \BaseController {
 	{
         $user = $this->userRepo->find($id);
         $group = $this->groupRepo->getModel()->get()->lists('name','id');
-        return View::make('user.edit')->with('user',$user)->with('group',$group);
+        $groupacl = $this->groupaclRepo->getModel()->get()->lists('name','id');
+        return View::make('user.edit')->with('user',$user)->with('group',$group)->with('groupacl',$groupacl);
 	}
 
     public function addGroup()
@@ -120,6 +100,20 @@ class userController extends \BaseController {
             $group = $this->groupRepo->find(Input::get('group_id'));
             if(!$user->hasGroup($group->name)){
                 $user->groups()->attach($group->id);
+            }
+            return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Grupo Asignado Satisfactoriamente');
+        }
+        return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Seleccione un Grupo');
+
+    }
+
+    public function addGroupFun()
+    {
+        $user = $this->userRepo->find(Input::get('user_id'));
+        if(Input::get('groupacl_id') != 0){
+            $groupacl = $this->groupaclRepo->find(Input::get('groupacl_id'));
+            if(!$user->hasGroupAcl($groupacl->name)){
+                $user->groupacls()->attach($groupacl->id);
             }
             return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Grupo Asignado Satisfactoriamente');
         }
@@ -139,6 +133,20 @@ class userController extends \BaseController {
         return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Seleccione un Grupo');
 
     }
+
+    public function deleteGroupFun()
+    {
+
+        $user = $this->userRepo->find(Input::get('user_id'));
+        if(Input::get('groupacl_id') != 0){
+            $groupacl = $this->groupaclRepo->find(Input::get('groupacl_id'));
+            $user->groupacls()->detach($groupacl->id);
+            return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Grupo removido satisfactoriamente');
+        }
+        return Redirect::action('userController@edit',['id' => $user->id])->withMessage('Seleccione un Grupo');
+
+    }
+    
 
     public function profile(){
         $user = Auth::user();
@@ -163,6 +171,17 @@ class userController extends \BaseController {
     public function update($id)
     {
         $user = $this->userRepo->find($id);
+        if (Input::hasFile('sign'))
+        {
+            $old_image = Auth::getUser()->sign;
+            $image = Input::file('sign');
+            $filename  = time() . '.' . $image->getClientOriginalExtension();
+            $path = public_path('img/sign/'.$filename);
+            Image::make($image->getRealPath())->resize(300, 150)->save($path);
+            $user->sign = 'img/sign/'.$filename;
+            $user->save();
+            File::delete($old_image);
+        }
         $manager = new UserManager($user, Input::all());
         $manager->save();
 
@@ -190,20 +209,5 @@ class userController extends \BaseController {
         return Redirect::route('user.index');
 	}
 
-    public function changeSign(){
-        $user_id = $this->userRepo->find(Input::get('user_id'));
-        if (Input::hasFile('sign'))
-        {
-            $old_image = Auth::getUser()->sign;
-            $image = Input::file('sign');
-            $filename  = time() . '.' . $image->getClientOriginalExtension();
-            $path = public_path('img/sign/'.$filename);
-            Image::make($image->getRealPath())->resize(300, 150)->save($path);
-            $user_id->sign = 'img/sign/'.$filename;
-            $user_id->save();
-            File::delete($old_image);
-        }
-        return Redirect::back();
-    }
 
 }

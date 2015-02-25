@@ -44,11 +44,8 @@
     </div>
 </p>
 
-    <h3>Se encontraron {{$typeDocuments->getTotal()}} Tipos de Documentos.</h3>
-
-    @include('typeDocument.filters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Name</th>

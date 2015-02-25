@@ -1,24 +1,34 @@
 <?php namespace Innaco\Entities;
 
-use Nicolaslopezj\Searchable\SearchableTrait;
-
-
+/**
+ * Innaco\Entities\stepDocument
+ *
+ * @property integer $id 
+ * @property integer $templates_id 
+ * @property integer $tasks_id 
+ * @property integer $groups_id 
+ * @property integer $order 
+ * @property boolean $edit 
+ * @property boolean $available 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Innaco\Entities\Template $template 
+ * @property-read \Innaco\Entities\Task $task 
+ * @property-read \Innaco\Entities\Group $group 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\Workflow[] $workflow 
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereTemplatesId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereTasksId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereGroupsId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereEdit($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereAvailable($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\stepDocument whereUpdatedAt($value)
+ */
 class stepDocument extends \Eloquent {
 
-	use SearchableTrait;
-
-	/**
-	 * Searchable rules.
-	 *
-	 * @var array
-	 */
-	protected $searchable = [
-		'columns' => [
-			'name' => 10,
-		],
-	];
-
-	protected $fillable = ['templates_id','tasks_id', 'groups_id','order','available'];
+	protected $fillable = ['templates_id','tasks_id', 'groups_id','order','available','edit'];
 
 	public function template(){
 		return $this->belongsTo('Innaco\Entities\Template','templates_id','id');

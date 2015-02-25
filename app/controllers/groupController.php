@@ -27,13 +27,7 @@ class groupController extends \BaseController {
 	 */
 	public function index()
 	{
-		if(Input::has('search'))
-		{
-			$groups = $this->groupRepo->getModel()->search(Input::get('search'))->where('available','=',1)->paginate(20);
-		}
-		else{
-			$groups = $this->groupRepo->getModel()->where('available','=',1)->paginate(20);
-		}
+        $groups = $this->groupRepo->getModel()->where('available','=',1)->paginate(20);
 		return View::make('group.list',compact('groups'));
 	}
 
@@ -110,13 +104,7 @@ class groupController extends \BaseController {
 
     public function activation()
     {
-        if(Input::has('search'))
-        {
-            $groups= $this->groupRepo->getModel()->search(Input::get('search'))->where('available','=',0);
-        }
-        else{
-            $groups= $this->groupRepo->getModel()->where('available','=',0)->paginate(20);
-        }
+        $groups= $this->groupRepo->getModel()->where('available','=',0)->paginate(20);
         return View::make('group.activation',compact('groups'));
     }
 

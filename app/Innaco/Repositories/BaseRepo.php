@@ -24,11 +24,6 @@ abstract class BaseRepo {
         return $this->model->get();
     }
 
-    public function search($data)
-    {
-        return $this->model->search($data)->paginate(20);
-    }
-
     public function destroy($id,$column)
     {
         return $this->model->where($column,'=',$id)->delete();

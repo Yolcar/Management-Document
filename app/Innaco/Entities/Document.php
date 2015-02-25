@@ -1,29 +1,30 @@
 <?php namespace Innaco\Entities;
 
-use Nicolaslopezj\Searchable\SearchableTrait;
-
+/**
+ * Innaco\Entities\Document
+ *
+ * @property integer $id 
+ * @property integer $serial 
+ * @property string $name 
+ * @property string $body 
+ * @property integer $templates_id 
+ * @property string $execute_date 
+ * @property string $observation 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Innaco\Entities\Template $template 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\Workflow[] $workflow 
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereSerial($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereBody($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereTemplatesId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereExecuteDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereObservation($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Document whereUpdatedAt($value)
+ */
 class Document extends \Eloquent {
-
-	use SearchableTrait;
-
-	/**
-	 * Searchable rules.
-	 *
-	 * @var array
-	 */
-	protected $searchable = [
-		'columns' => [
-			'serial' => 5,
-			'documents.name' => 4,
-			'templates.name' => 3,
-			'documents.body' => 2,
-			'execute_date' => 1,
-			'documents.created_at' =>1,
-		],
-		'joins' => [
-			'templates' => ['documents.templates_id','templates.id']
-		]
-	];
 
 	protected $fillable = ['serial','name', 'body','templates_id','execute_date'];
 

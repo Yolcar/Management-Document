@@ -13,6 +13,7 @@
 
             {{Field::input('text','full_name',null)}}
             {{Field::input('text','email',null)}}
+            {{Field::input('text','cedula',null)}}
             {{Field::input('text','password',null)}}
             {{Field::input('text','password_confirmation',null,['placeholder' => 'Repita la contraseña'])}}
             <p>

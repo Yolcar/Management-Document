@@ -6,10 +6,6 @@ class groupTableSeeder extends Seeder {
 
 	public function run()
 	{
-        Group::create([
-            'name' => Config::get('custom.group_management.name'),
-            'available' => 1
-        ]);
 
         Group::create([
             'name' => 'Secretaria Recursos Humanos',

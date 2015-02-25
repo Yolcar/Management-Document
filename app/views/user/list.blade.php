@@ -20,11 +20,8 @@
     </div>
 
 
-    <h3>Se encontraron {{$users->getTotal()}} usuarios registrados.</h3>
-
-    @include('user.filters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -43,72 +40,74 @@
                         {{ Form::button('Administrar', ['type' => 'submit', 'class' => 'btn btn-custom-disable','data-toggle'=>'popover','data-content'=>'Permite editar la informacion de los  usuarios ya creados.','data-original-title'=>'Administrar']) }}
                         {{ Form::close() }}
                     </div> <!-- end yes -->
-                    @if($user->workflow->count()>0)
-                        <button class="btn btn-custom-disable" id="confirm{{$user->id}}" data-trigger="hover" data-toggle="popover" data-content="Cambia la disponibilidad del usuario y no podra se usado hasta que se habilite nuevamente." data-original-title="Desactivar plantilla" href="#" data-target="#disableUser{{$user->id}}" data-id="{{$user->id}}">Desactivar</button>
+                    @if($user->id != 1)
+                        @if($user->workflow->count()>0)
+                            <button class="btn btn-custom-disable" id="confirm{{$user->id}}" data-trigger="hover" data-toggle="popover" data-content="Cambia la disponibilidad del usuario y no podra se usado hasta que se habilite nuevamente." data-original-title="Desactivar plantilla" href="#" data-target="#disableUser{{$user->id}}" data-id="{{$user->id}}">Desactivar</button>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="disableUser{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title" id="myModalLabel">¿Estas seguro de desactivar al usuario: {{$user->name}}?</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h4 class="modal-title" id="myModalLabel"><span style="color:red;" class="glyphicon glyphicon-warning-sign"></span> <p id="id"></p>Si necesita usar activar este usuario puede re-activarlo en un futuro</h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div id="delmodelcontainer" style="float:right">
+                            <!-- Modal -->
+                            <div class="modal fade" id="disableUser{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title" id="myModalLabel">¿Estas seguro de desactivar al usuario: {{$user->name}}?</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="modal-title" id="myModalLabel"><span style="color:red;" class="glyphicon glyphicon-warning-sign"></span> <p id="id"></p>Si necesita usar activar este usuario puede re-activarlo en un futuro</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div id="delmodelcontainer" style="float:right">
 
-                                            <div id="yes" style="float:left; padding-right:10px">
-                                                {{ Form::open(['route' => ['user.destroy', $user->id ], 'method' => 'DELETE']) }}
-                                                {{ Form::button('Desactivar', ['type' => 'submit', 'class' => 'btn btn-custom-disable']) }}
-                                                {{ Form::close() }}
-                                            </div> <!-- end yes -->
+                                                <div id="yes" style="float:left; padding-right:10px">
+                                                    {{ Form::open(['route' => ['user.destroy', $user->id ], 'method' => 'DELETE']) }}
+                                                    {{ Form::button('Desactivar', ['type' => 'submit', 'class' => 'btn btn-custom-disable']) }}
+                                                    {{ Form::close() }}
+                                                </div> <!-- end yes -->
 
-                                            <div id="no" style="float:left;">
-                                                <button type="button" class="btn btn-custom-delete" data-dismiss="modal">No</button>
-                                            </div><!-- end no -->
+                                                <div id="no" style="float:left;">
+                                                    <button type="button" class="btn btn-custom-delete" data-dismiss="modal">No</button>
+                                                </div><!-- end no -->
 
-                                        </div> <!-- end delmodelcontainer -->
+                                            </div> <!-- end delmodelcontainer -->
 
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-                    @else
-                        <button class="btn btn-custom-delete" id="confirm{{$user->id}}" type="button" data-trigger="hover" data-toggle="popover" data-content="Elimina Fisicamente el usuario, para volver a usarlo sera necesario crearlo de nuevo." data-original-title="Eliminar Usuario" href="#" data-target="#delUser{{$user->id}}" data-id="{{$user->id}}">Eliminar</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        @else
+                            <button class="btn btn-custom-delete" id="confirm{{$user->id}}" type="button" data-trigger="hover" data-toggle="popover" data-content="Elimina Fisicamente el usuario, para volver a usarlo sera necesario crearlo de nuevo." data-original-title="Eliminar Usuario" href="#" data-target="#delUser{{$user->id}}" data-id="{{$user->id}}">Eliminar</button>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="delUser{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title" id="myModalLabel">¿Estas seguro de Eliminar al usuario: {{$user->name}}?</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h4 class="modal-title" id="myModalLabel"><span style="color:red;" class="glyphicon glyphicon-warning-sign"></span> <p id="id"></p>El usuario sera eliminado completamente del sistema</h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div id="delmodelcontainer" style="float:right">
+                            <!-- Modal -->
+                            <div class="modal fade" id="delUser{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title" id="myModalLabel">¿Estas seguro de Eliminar al usuario: {{$user->name}}?</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="modal-title" id="myModalLabel"><span style="color:red;" class="glyphicon glyphicon-warning-sign"></span> <p id="id"></p>El usuario sera eliminado completamente del sistema</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div id="delmodelcontainer" style="float:right">
 
-                                            <div id="yes" style="float:left; padding-right:10px">
-                                                {{ Form::open(['route' => ['user.destroy', $user->id ], 'method' => 'DELETE']) }}
-                                                {{ Form::button('Eliminar', ['type' => 'submit', 'class' => 'btn btn-custom-delete']) }}
-                                                {{ Form::close() }}
-                                            </div> <!-- end yes -->
+                                                <div id="yes" style="float:left; padding-right:10px">
+                                                    {{ Form::open(['route' => ['user.destroy', $user->id ], 'method' => 'DELETE']) }}
+                                                    {{ Form::button('Eliminar', ['type' => 'submit', 'class' => 'btn btn-custom-delete']) }}
+                                                    {{ Form::close() }}
+                                                </div> <!-- end yes -->
 
-                                            <div id="no" style="float:left;">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                                            </div><!-- end no -->
+                                                <div id="no" style="float:left;">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                                </div><!-- end no -->
 
-                                        </div> <!-- end delmodelcontainer -->
+                                            </div> <!-- end delmodelcontainer -->
 
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        @endif
                     @endif
                     <script>
                         $('#confirm{{$user->id}}').click(function () {

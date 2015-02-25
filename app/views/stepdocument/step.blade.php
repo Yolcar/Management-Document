@@ -42,6 +42,7 @@
             <th width="20%" class="text-center">Paso</th>
             <th width="40%" class="text-center">Grupo Responsable</th>
             <th width="10%" class="text-center">Nivel de Prioridad</th>
+            <th width="10%" class="text-center">Editable</th>
         </tr>
         </thead>
         <tbody>
@@ -52,11 +53,16 @@
                     {{Field::select('groups_id[]',$groups)}}
                 </td>
                 <td>
-                @if($step->name == 'Crear')
-                {{Form::text('order[]',1,['readonly'])}}
-                @else
-                {{Field::select('order[]',$totalSteps)}}
-                @endif
+                    @if($step->name == 'Crear')
+                    {{Form::text('order[]',1,['readonly'])}}
+                    @else
+                    {{Field::select('order[]',$totalSteps)}}
+                    @endif
+                </td>
+                <td>
+                    @if($step->name != 'Crear')
+                        {{Form::checkbox('edit['.$step->id.']',1)}}
+                    @endif
                 </td>
             </tr>
             @endforeach

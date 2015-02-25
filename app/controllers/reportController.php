@@ -51,11 +51,55 @@ class reportController extends \BaseController {
         $total_templates = $this->templateRepo->getModel()->get();
         $total_groups = $this->groupRepo->getModel()->get();
         $total_typeDocuments = $this->typeDocumentRepo->getModel()->get();
+        $chartsDocumentYear = array();
+        $chartsDocumentState = array();
 
+        $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime('01-01-'.date("Y")))),0,0,0), 'Y-m-d H:i:s');
+        $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime(date("j").'-'.date("n").'-'.date("Y")))),0,0,0), 'Y-m-d H:i:s');
+        for($i=2;$i<=4;$i++) {
+            $flag = false;
+            $documents = $this->documentRepo->getModel();
+            $documents = $documents->where(function ($query) use ($i,$flag) {
+                $workflows = $this->workflowRepo->getModel()->select('documents_id')->where('states_id', '=', $i)->distinct()->get();
+                foreach ($workflows as $workflow) {
+                    if ($i == 2) {
+                        foreach ($workflows as $workflow) {
+                            $query->orwhere('id', '=', $workflow->documents_id);
+                        }
+                        $flag = true;
+                    } elseif ($i == 3) {
+                        if ($this->workflowRepo->getModel()->where('documents_id', '=', $workflow->documents_id)->get()->count() ==
+                            $this->workflowRepo->getModel()->where('documents_id', '=', $workflow->documents_id)->where('states_id', '=', 3)->get()->count()
+                        ) {
+                            $query->orwhere('id', '=', $workflow->documents_id);
+                            $flag = true;
+                        }
+                    } elseif ($i == 4) {
+                        if ($this->workflowRepo->getModel()->where('documents_id', '=', $workflow->documents_id)->get()->count() > 0) {
+                            $query->orwhere('id', '=', $workflow->documents_id);
+                            $flag = true;
+                        }
+                    }
+                }
+                if($flag == false){
+                    $query->where('id','=',0)->get();
+                }else{
+                    $query->get();
+                }
+            });
+            array_push($chartsDocumentState,['name' => $i, 'value' => $documents->count()]);
+        }
+        for($i=1;$i<=date("n");$i++){
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime('01-'.$i.'-'.date("Y")))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime('31-'.$i.'-'.date("Y")))),0,0,0), 'Y-m-d H:i:s');
+            $documents = $this->documentRepo->getModel()->whereBetween('created_at',array($CreateDateBegin,$CreateDateEnd))->get();
+            array_push($chartsDocumentYear,['month' => $i,'value' => $documents->count()]);
+        }
 
         return View::make('report.list')->with(['total_users' => $total_users, 'total_tasks' => $total_tasks,
                                                 'total_documents' => $total_documents, 'total_templates' => $total_templates,
-                                                'total_groups' => $total_groups, 'total_typeDocuments' => $total_typeDocuments]);
+                                                'total_groups' => $total_groups, 'total_typeDocuments' => $total_typeDocuments,
+                                                'chartsDocumentYear' => $chartsDocumentYear,'chartsDocumentState' => $chartsDocumentState]);
 	}
 
     public function getDocuments(){
@@ -120,8 +164,8 @@ class reportController extends \BaseController {
         }
 
         if($CreateDateBegin!='' and $CreateDateEnd!=''){
-            $CreateDateBegin = date_format(date_create(date("Y-m-d", strtotime($CreateDateBegin))), 'Y-m-d H:i:s');
-            $CreateDateEnd = date_format(date_create(date("Y-m-d", strtotime($CreateDateEnd))), 'Y-m-d H:i:s');
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateBegin))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateEnd))),23,59,59), 'Y-m-d H:i:s');
 
             if($CreateDateBegin <= $CreateDateEnd){
                 $documents = $documents->where(function($query) use ($CreateDateBegin, $CreateDateEnd){
@@ -208,9 +252,264 @@ class reportController extends \BaseController {
         with('ExecuteDateBegin',Input::get('ExecuteDateBegin'))->with('ExecuteDateEnd',Input::get('ExecuteDateEnd'))->with('State',Input::get('State'))->with('CreatedUser',Input::get('CreatedUser'));
     }
 
-    public function printReportDocuments($documents){
-        dd(Input::all());
-        return View::make('report.document.printReport',compact('campos','documents'));
+    public function getUsers(){
+        $groups = $this->groupRepo->getModel()->get();
+        return View::make('report.user.index',compact('groups'));
     }
+
+    public function postUsers(){
+        $NameUser = Input::get('NameUser');
+        $Cedula = Input::get('Cedula');
+        $Email = Input::get('Email');
+        $Groups = Input::get('Groups');
+        $CreateDateBegin = Input::get('CreateDateBegin');
+        $CreateDateEnd = Input::get('CreateDateEnd');
+        $Estado = Input::get('State');
+        $flag = false;
+
+        $users = $this->userRepo->getModel();
+        $campos = array();
+        array_push($campos,['name' => 'Nombre', 'relacion1' => 'full_name','relacion2' => '']);
+        if($NameUser!=''){
+            $users = $users->where('full_name','LIKE','%'.$NameUser.'%');
+        }
+
+        if($Cedula!=''){
+            $users = $users->where('cedula','LIKE','%'.$Cedula.'%');
+            array_push($campos,['name' => 'Cedula', 'relacion1' => 'cedula','relacion2' => '']);
+        }
+
+        if($Email!=''){
+            $users = $users->where('email','LIKE','%'.$Email.'%');
+            array_push($campos,['name' => 'Email', 'relacion1' => 'email','relacion2' => '']);
+        }
+
+        if($Groups != '') {
+            $flag=false;
+            $Groups = explode('|',Input::get('Groups'));
+            $usuarios = $this->userRepo->findAll();
+            $users = $users->where(function($query) use ($Groups,$flag,$usuarios) {
+                for($i = 0; $i < count($Groups); $i++){
+                    foreach($usuarios as $usuario){
+                        if($usuario->hasGroup($Groups[$i])){
+                            $query->orwhere('id','=',$usuario->id);
+                            $flag = true;
+                        }
+                    }
+                }
+                if($flag==false){
+                    $query->where('id','=',0);
+                }
+            });
+
+            array_push($campos, ['name' => 'Grupos']);
+        }
+
+        if($CreateDateBegin!='' and $CreateDateEnd!=''){
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateBegin))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateEnd))),23,59,59), 'Y-m-d H:i:s');
+
+            if($CreateDateBegin <= $CreateDateEnd){
+                $users = $users->where(function($query) use ($CreateDateBegin, $CreateDateEnd){
+                    $query->whereBetween('created_at',array($CreateDateBegin,$CreateDateEnd));
+                });
+            }
+            array_push($campos,['name' => 'Fecha de Creacion', 'relacion1' => 'created_at','relacion2' => '']);
+        }
+
+        if($Estado != ''){
+            if($Estado == 0 or $Estado==1){
+                $users = $users->where('available','=',intval($Estado));
+            }
+            array_push($campos,['name' => 'Estado', 'relacion1' => 'available','relacion2' => '']);
+        }
+
+
+
+        $users = $users->get();
+        if(Input::has('Print')){
+            $Groups = Input::get('Groups');
+            $pdf = PDF::loadView('report.user.printReport', compact('users','campos','Groups'));
+            $pdf = $pdf->setOption("footer-html", "footer.html");
+            return $pdf->download('reporte_usuarios_'.date("Y-m-d H:i:s").'.pdf');
+            //return View::make('report.document.printReport',compact('documents','campos'));
+        }
+        return View::make('report.user.result',compact('users','campos'))->with('NameUser',Input::get('NameUser'))->
+        with('Cedula', Input::get('Cedula'))->with('Email',Input::get('Email'))->with('Groups',Input::get('Groups'))->
+        with('CreateDateBegin',Input::get('CreateDateBegin'))->with('CreateDateEnd',Input::get('CreateDateEnd'))->with('State',Input::get('State'));
+    }
+
+    public function getTasks(){
+        return View::make('report.task.index');
+    }
+
+    public function postTasks(){
+        $NameTask = Input::get('NameTask');
+        $CreateDateBegin = Input::get('CreateDateBegin');
+        $CreateDateEnd = Input::get('CreateDateEnd');
+        $Estado = Input::get('State');
+        $flag = false;
+
+        $tasks = $this->taskRepo->getModel();
+        $campos = array();
+        array_push($campos,['name' => 'Nombre', 'relacion1' => 'name','relacion2' => '']);
+        if($NameTask!=''){
+            $tasks = $tasks->where('name','LIKE','%'.$NameTask.'%');
+        }
+
+        if($CreateDateBegin!='' and $CreateDateEnd!=''){
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateBegin))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateEnd))),23,59,59), 'Y-m-d H:i:s');
+
+            if($CreateDateBegin <= $CreateDateEnd){
+                $tasks = $tasks->where(function($query) use ($CreateDateBegin, $CreateDateEnd){
+                    $query->whereBetween('created_at',array($CreateDateBegin,$CreateDateEnd));
+                });
+            }
+            array_push($campos,['name' => 'Fecha de Creacion', 'relacion1' => 'created_at','relacion2' => '']);
+        }
+
+        if($Estado != ''){
+            if($Estado == 0 or $Estado==1){
+                $tasks = $tasks->where('available','=',intval($Estado));
+            }
+            array_push($campos,['name' => 'Estado', 'relacion1' => 'available','relacion2' => '']);
+        }
+
+
+
+        $tasks = $tasks->get();
+        if(Input::has('Print')){
+            $pdf = PDF::loadView('report.task.printReport', compact('tasks','campos'));
+            $pdf = $pdf->setOption("footer-html", "footer.html");
+            return $pdf->download('reporte_tareas_'.date("Y-m-d H:i:s").'.pdf');
+            //return View::make('report.document.printReport',compact('documents','campos'));
+        }
+        return View::make('report.task.result',compact('tasks','campos'))->with('NameTask',Input::get('NameTask'))->
+        with('CreateDateBegin',Input::get('CreateDateBegin'))->with('CreateDateEnd',Input::get('CreateDateEnd'))->with('State',Input::get('State'));
+    }
+
+    public function getTypeDocuments(){
+        return View::make('report.typeDocument.index');
+    }
+
+    public function postTypeDocuments(){
+        $NameTypeDocument = Input::get('NameTypeDocument');
+        $CreateDateBegin = Input::get('CreateDateBegin');
+        $CreateDateEnd = Input::get('CreateDateEnd');
+        $Estado = Input::get('State');
+        $flag = false;
+
+        $typeDocuments = $this->typeDocumentRepo->getModel();
+        $campos = array();
+        array_push($campos,['name' => 'Nombre', 'relacion1' => 'name','relacion2' => '']);
+        if($NameTypeDocument!=''){
+            $typeDocuments = $typeDocuments->where('name','LIKE','%'.$NameTypeDocument.'%');
+        }
+
+        if($CreateDateBegin!='' and $CreateDateEnd!=''){
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateBegin))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateEnd))),23,59,59), 'Y-m-d H:i:s');
+
+            if($CreateDateBegin <= $CreateDateEnd){
+                $typeDocuments = $typeDocuments->where(function($query) use ($CreateDateBegin, $CreateDateEnd){
+                    $query->whereBetween('created_at',array($CreateDateBegin,$CreateDateEnd));
+                });
+            }
+            array_push($campos,['name' => 'Fecha de Creacion', 'relacion1' => 'created_at','relacion2' => '']);
+        }
+
+        if($Estado != ''){
+            if($Estado == 0 or $Estado==1){
+                $typeDocuments = $typeDocuments->where('available','=',intval($Estado));
+            }
+            array_push($campos,['name' => 'Estado', 'relacion1' => 'available','relacion2' => '']);
+        }
+
+
+
+        $typeDocuments = $typeDocuments->get();
+        if(Input::has('Print')){
+            $pdf = PDF::loadView('report.typeDocument.printReport', compact('typeDocuments','campos'));
+            $pdf = $pdf->setOption("footer-html", "footer.html");
+            return $pdf->download('reporte_tipos_de_documentos_'.date("Y-m-d H:i:s").'.pdf');
+            //return View::make('report.document.printReport',compact('documents','campos'));
+        }
+        return View::make('report.typeDocument.result',compact('typeDocuments','campos'))->with('NameTypeDocument',Input::get('NameTypeDocument'))->
+        with('CreateDateBegin',Input::get('CreateDateBegin'))->with('CreateDateEnd',Input::get('CreateDateEnd'))->with('State',Input::get('State'));
+    }
+
+    public function getTemplates(){
+        $typeDocuments = $this->typeDocumentRepo->findAll();
+        return View::make('report.template.index',compact('typeDocuments'));
+    }
+
+    public function postTemplates(){
+        $NameTemplate = Input::get('NameTemplate');
+        $TypeDocuments = Input::get('TypeDocuments');
+        $CreateDateBegin = Input::get('CreateDateBegin');
+        $CreateDateEnd = Input::get('CreateDateEnd');
+        $Estado = Input::get('State');
+        $flag = false;
+
+        $templates = $this->templateRepo->getModel();
+        $campos = array();
+        array_push($campos,['name' => 'Nombre', 'relacion1' => 'name','relacion2' => '']);
+        if($NameTemplate!=''){
+            $templates = $templates->where('name','LIKE','%'.$NameTemplate.'%');
+        }
+
+        if($TypeDocuments!='') {
+            $flag = false;
+            $TypeDocuments = explode('|', Input::get('TypeDocuments'));
+            $plantillas = $this->templateRepo->findAll();
+            $templates = $templates->where(function ($query) use ($TypeDocuments, $flag, $plantillas) {
+                for ($i = 0; $i < count($TypeDocuments); $i++) {
+                    foreach ($plantillas as $plantilla) {
+                        if ($plantilla->typedocuments->name == $TypeDocuments[$i]) {
+                            $query->orwhere('id', '=', $plantilla->id);
+                            $flag = true;
+                        }
+                    }
+                }
+                if ($flag == false) {
+                    $query->where('id', '=', 0);
+                }
+            });
+            array_push($campos,['name' => 'Tipo de Documento', 'relacion1' => 'typedocuments','relacion2' => 'name']);
+        }
+
+        if($CreateDateBegin!='' and $CreateDateEnd!=''){
+            $CreateDateBegin = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateBegin))),0,0,0), 'Y-m-d H:i:s');
+            $CreateDateEnd = date_format(date_time_set(date_create(date("Y-m-d", strtotime($CreateDateEnd))),23,59,59), 'Y-m-d H:i:s');
+
+            if($CreateDateBegin <= $CreateDateEnd){
+                $templates = $templates->where(function($query) use ($CreateDateBegin, $CreateDateEnd){
+                    $query->whereBetween('created_at',array($CreateDateBegin,$CreateDateEnd));
+                });
+            }
+            array_push($campos,['name' => 'Fecha de Creacion', 'relacion1' => 'created_at','relacion2' => '']);
+        }
+
+        if($Estado != ''){
+            if($Estado == 0 or $Estado==1){
+                $templates = $templates->where('available','=',intval($Estado));
+            }
+            array_push($campos,['name' => 'Estado', 'relacion1' => 'available','relacion2' => '']);
+        }
+
+        $templates = $templates->get();
+        if(Input::has('Print')){
+            $pdf = PDF::loadView('report.template.printReport', compact('templates','campos'));
+            $pdf = $pdf->setOption("footer-html", "footer.html");
+            return $pdf->download('reporte_plantillas_'.date("Y-m-d H:i:s").'.pdf');
+            //return View::make('report.document.printReport',compact('documents','campos'));
+        }
+        return View::make('report.template.result',compact('templates','campos'))->with('NameTemplate',Input::get('NameTemplate'))->
+        with('TypeDocuments',Input::get('TypeDocuments'))->with('CreateDateBegin',Input::get('CreateDateBegin'))->
+        with('CreateDateEnd',Input::get('CreateDateEnd'))->with('State',Input::get('State'));
+    }
+
+
 
 }

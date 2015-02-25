@@ -5,11 +5,8 @@
 @section('body')
     <h1 class="page-header">Seleccion de Plantilla</h1>
 
-    <h3>Se encontraron {{$templates->getTotal()}} Plantillas.</h3>
-
-    @include('document.filtersTemplate')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th width="20%">Tipo Documento</th>

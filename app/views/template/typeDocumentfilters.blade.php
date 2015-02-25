@@ -20,15 +20,14 @@
 </script>
 
 <div class="span4 collapse" id="myDiv">
-{{ Form::open(['route' => 'template.create', 'method' => 'GET']) }}
-
-{{ Form::text('search') }}
-{{ Form::button('Buscar',['type' => 'submit', 'class' => 'btn btn-custom-search','data-toggle'=>'popover','data-content'=>'Hace una búsqueda de los tipos de documentos creados.','data-original-title'=>'Buscar']) }}
-
-{{Form::close()}}
-<table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
     <div>
     <thead>
+    <tr>
+        <th>Nombre</th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
     @foreach($typeDocuments as $typeDocument)

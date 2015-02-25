@@ -1,21 +1,21 @@
 <?php namespace Innaco\Entities;
 
-use Nicolaslopezj\Searchable\SearchableTrait;
-
+/**
+ * Innaco\Entities\Task
+ *
+ * @property integer $id 
+ * @property string $name 
+ * @property boolean $available 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\StepDocument[] $stepDocument 
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Task whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Task whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Task whereAvailable($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Task whereUpdatedAt($value)
+ */
 class Task extends \Eloquent {
-
-	use SearchableTrait;
-
-	/**
-	 * Searchable rules.
-	 *
-	 * @var array
-	 */
-	protected $searchable = [
-		'columns' => [
-			'name' => 10,
-		],
-	];
 
 	protected $fillable = ['name','available'];
 

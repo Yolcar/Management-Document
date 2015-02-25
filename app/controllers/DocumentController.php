@@ -4,6 +4,7 @@ use Innaco\Repositories\DocumentRepo;
 use Innaco\Repositories\TemplateRepo;
 use Innaco\Repositories\StepDocumentRepo;
 use Innaco\Repositories\WorkflowRepo;
+use Innaco\Repositories\GroupRepo;
 use Innaco\Managers\DocumentManager;
 
 class documentController extends \BaseController {
@@ -13,13 +14,16 @@ class documentController extends \BaseController {
 	protected $templateRepo;
     protected $stepDocumentRepo;
 	protected $workflowRepo;
+    protected $groupRepo;
 
-	public function __construct(DocumentRepo $documentRepo, TemplateRepo $templateRepo, StepDocumentRepo $stepDocumentRepo, WorkflowRepo $workflowRepo)
+	public function __construct(DocumentRepo $documentRepo, TemplateRepo $templateRepo,
+                                StepDocumentRepo $stepDocumentRepo, WorkflowRepo $workflowRepo,GroupRepo $groupRepo)
 	{
 		$this->documentRepo = $documentRepo;
 		$this->templateRepo = $templateRepo;
         $this->stepDocumentRepo = $stepDocumentRepo;
 		$this->workflowRepo = $workflowRepo;
+        $this->groupRepo = $groupRepo;
 	}
 
 	/**
@@ -32,14 +36,8 @@ class documentController extends \BaseController {
 
         $user = \Auth::User();
         $templates_id = $this->stepDocumentRepo->getModel()->select('templates_id')->distinct();
+        $documents = $this->documentRepo->getModel();
 
-		if(Input::has('search'))
-		{
-		$documents = $this->documentRepo->getModel()->search(Input::get('search'));
-		}
-		else{
-			$documents = $this->documentRepo->getModel();
-		}
 		if($templates_id->count()!=0){
 			foreach($user->groups()->get() as $group)
 			{
@@ -75,13 +73,8 @@ class documentController extends \BaseController {
 		$user = \Auth::User();
 		$templates_id = $this->stepDocumentRepo->getModel()->select('templates_id')->distinct();
 
-		if(Input::has('search'))
-		{
-			$templates = $this->templateRepo->getModel()->search(Input::get('search'),0);
-		}
-		else{
-			$templates = $this->templateRepo->getModel();
-		}
+        $templates = $this->templateRepo->getModel();
+
         if($user->groups->count() != 0) {
             if ($templates_id->count() != 0) {
                 foreach ($user->groups()->get() as $group) {
@@ -112,43 +105,49 @@ class documentController extends \BaseController {
 
 	public function writeDocument($id)
 	{
-		$user = \Auth::User();
-		$templates_id = $this->stepDocumentRepo->getModel()->select('templates_id')->distinct();
+        $user = \Auth::User();
+        $groupCreate = $this->groupRepo->find($this->stepDocumentRepo->getModel()->where('templates_id','=',$id)->get()->first()->groups_id);
+        if($user->hasGroup($groupCreate->name)){
+            $templates_id = $this->stepDocumentRepo->getModel()->select('templates_id')->distinct();
 
-		$template = $this->templateRepo->getModel();
-		if($template->count()!=0) {//si encuenta la plantilla
-			if ($templates_id->count() != 0) {
-				foreach ($user->groups()->get() as $group) {
-					$templates_id->orWhere(function ($query) use ($group) {
-						$query->Where('groups_id', '=', $group->id)->where('tasks_id', '=', 1);
-					});
-				}
-				if ($templates_id->count() != 0) {
-					$templates_id = $templates_id->get();
-					foreach ($templates_id as $template_id) {
-						if ($template_id->templates_id==$id){
-							$template = $template->find($id);
-						}
-					}
-					if($template->id==$id){
-						return View::make('document.create')->with('template',$template);
-					}
-					else{
-						//Error cuando no se tiene permiso para esa plantilla
-						return Response::view('errors.missing', array(), 404);
-					}
-				} else {
-					//Error cuando no se tiene el permiso para crear
-					return Response::view('errors.missing', array(), 404);
-				}
-			} else {
-				//Error cuando no hay ni pasos creados
-				return Response::view('errors.missing', array(), 404);
-			}
-		}
-		else{ //si NO se encuenta la plantilla
-			return Response::view('errors.missing', array(), 404);
-		}
+            $template = $this->templateRepo->getModel();
+            if($template->count()!=0) {//si encuenta la plantilla
+                if ($templates_id->count() != 0) {
+                    foreach ($user->groups()->get() as $group) {
+                        $templates_id->orWhere(function ($query) use ($group) {
+                            $query->Where('groups_id', '=', $group->id)->where('tasks_id', '=', 1);
+                        });
+                    }
+                    if ($templates_id->count() != 0) {
+                        $templates_id = $templates_id->get();
+                        foreach ($templates_id as $template_id) {
+                            if ($template_id->templates_id==$id){
+                                $template = $template->find($id);
+                            }
+                        }
+                        if($template->id==$id){
+                            return View::make('document.create')->with('template',$template);
+                        }
+                        else{
+                            //Error cuando no se tiene permiso para esa plantilla
+                            return Response::view('errors.missing', array(), 404);
+                        }
+                    } else {
+                        //Error cuando no se tiene el permiso para crear
+                        return Response::view('errors.missing', array(), 404);
+                    }
+                } else {
+                    //Error cuando no hay ni pasos creados
+                    return Response::view('errors.missing', array(), 404);
+                }
+            }
+            else{ //si NO se encuenta la plantilla
+                return Response::view('errors.missing', array(), 404);
+            }
+        }else{ //si tiene permiso de crear
+            return Response::view('errors.missing', array(), 404);
+        }
+
 	}
 
 

@@ -40,6 +40,7 @@
     {{$document->body}}
     {{HTML::image($document->workflow->last()->user->sign)}}
     <p>{{$document->workflow->last()->user->full_name}}</p>
+    <p>{{$document->workflow->last()->user->cedula}}</p>
     <p>{{$document->workflow->last()->stepdocument->group->name}}</p>
 </div>
 </body>

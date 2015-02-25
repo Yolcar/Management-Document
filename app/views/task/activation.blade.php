@@ -5,11 +5,8 @@
 @section('body')
     <h1 class="page-header">Tareas Desactivadas</h1>
 
-    <h3>Se encontraron {{$tasks->getTotal()}} tareas desactivadas.</h3>
-
-    @include('task.activeFilters')
-
-    <table class="table table-striped table-hover">
+    <br><br><br>
+    <table id="" class="display table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
         <tr>
             <th width="40%">Nombre</th>
