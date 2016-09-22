@@ -1,8 +1,11 @@
-<?php namespace Innaco\Repositories;
+<?php
+
+namespace Innaco\Repositories;
+
 use Innaco\Entities\Groupacl;
 
-class GroupaclRepo extends BaseRepo {
-
+class GroupaclRepo extends BaseRepo
+{
     public function getModel()
     {
         return new groupacl();
@@ -11,7 +14,7 @@ class GroupaclRepo extends BaseRepo {
     public function newGroupacl()
     {
         $groupacl = new groupacl();
+
         return $groupacl;
     }
-
 }

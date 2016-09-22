@@ -1,20 +1,21 @@
 <?php
 /**
- * Part of the Laravel-Excel package
+ * Part of the Laravel-Excel package.
  *
  * NOTICE OF LICENSE
  *
  * Licensed under the LPGL.
  *
- * @package        Laravel-4 PHPExcel
  * @version        1.*
+ *
  * @author         Maatwebsite
  * @license        LGPL
  * @copyright  (c) 2013, Maatwebsite
+ *
  * @link           http://maatwebsite.nl
  */
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ return array(
     | The default properties when creating a new Excel file
     |
     */
-    'properties' => array(
+    'properties' => [
         'creator'        => 'Maatwebsite',
         'lastModifiedBy' => 'Maatwebsite',
         'title'          => 'Spreadsheet',
@@ -34,35 +35,35 @@ return array(
         'category'       => 'Excel',
         'manager'        => 'Maatwebsite',
         'company'        => 'Maatwebsite',
-    ),
+    ],
 
     /*
     |--------------------------------------------------------------------------
     | Sheets settings
     |--------------------------------------------------------------------------
     */
-    'sheets'     => array(
+    'sheets'     => [
 
         /*
         |--------------------------------------------------------------------------
         | Default page setup
         |--------------------------------------------------------------------------
         */
-        'pageSetup' => array(
+        'pageSetup' => [
             'orientation'           => 'portrait',
             'paperSize'             => '9',
             'scale'                 => '100',
             'fitToPage'             => false,
             'fitToHeight'           => true,
             'fitToWidth'            => true,
-            'columnsToRepeatAtLeft' => array('', ''),
-            'rowsToRepeatAtTop'     => array(0, 0),
+            'columnsToRepeatAtLeft' => ['', ''],
+            'rowsToRepeatAtTop'     => [0, 0],
             'horizontalCentered'    => false,
             'verticalCentered'      => false,
             'printArea'             => null,
             'firstPageNumber'       => null,
-        ),
-    ),
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -75,4 +76,4 @@ return array(
 
     'creator'    => 'Maatwebsite',
 
-);
+];

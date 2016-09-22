@@ -1,11 +1,12 @@
-<?php namespace Innaco\Managers;
+<?php
 
+namespace Innaco\Managers;
 
-class ValidationException extends \Exception{
-
+class ValidationException extends \Exception
+{
     protected $errors;
 
-    public function __construct($message,$errors)
+    public function __construct($message, $errors)
     {
         $this->errors = $errors;
         parent::__construct($message);
@@ -15,5 +16,4 @@ class ValidationException extends \Exception{
     {
         return $this->errors;
     }
-
 }

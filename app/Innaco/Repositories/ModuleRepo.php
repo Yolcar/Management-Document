@@ -1,8 +1,11 @@
-<?php namespace Innaco\Repositories;
+<?php
+
+namespace Innaco\Repositories;
+
 use Innaco\Entities\Module;
 
-class ModuleRepo extends BaseRepo {
-
+class ModuleRepo extends BaseRepo
+{
     public function getModel()
     {
         return new module();
@@ -11,7 +14,7 @@ class ModuleRepo extends BaseRepo {
     public function newModule()
     {
         $module = new module();
+
         return $module;
     }
-
 }

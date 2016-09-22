@@ -1,25 +1,25 @@
 <?php
 
-return array(
+return [
 
-    'database'      => array(
+    'database'      => [
         'driver'    => 'mysql',
         'db_user'   => 'root',
         'db_pass'   => 'secret',
         'database'  => 'homestead',
-        'host'      => 'localhost'
-    ),
+        'host'      => 'localhost',
+    ],
 
-    'group_management' => array(
+    'group_management' => [
         'name'      => 'Management',
         'user'      => 'Management',
         'password'  => '123456',
-        'email'     => 'management@management.com'
-    ),
+        'email'     => 'management@management.com',
+    ],
 
-    'system'    => array(
-        'app_name'      =>  'Document\'s Management Innaco',
-        'client'        =>  'Industria Nacional de Conexiones C.A'
-    ),
+    'system'    => [
+        'app_name'      => 'Document\'s Management Innaco',
+        'client'        => 'Industria Nacional de Conexiones C.A',
+    ],
 
-);
+];

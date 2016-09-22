@@ -1,12 +1,14 @@
-<?php namespace Innaco\Managers;
+<?php
 
-class GroupManager extends BaseManager{
+namespace Innaco\Managers;
 
+class GroupManager extends BaseManager
+{
     public function getRules()
     {
         $rules = [
-            'name' => 'required|unique:groups,name,' . $this->entity->id,
-            'available' => ''
+            'name'      => 'required|unique:groups,name,'.$this->entity->id,
+            'available' => '',
         ];
 
         return $rules;

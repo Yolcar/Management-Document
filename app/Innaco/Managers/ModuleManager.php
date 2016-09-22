@@ -1,11 +1,13 @@
-<?php namespace Innaco\Managers;
+<?php
 
-class ModuleManager extends BaseManager{
+namespace Innaco\Managers;
 
+class ModuleManager extends BaseManager
+{
     public function getRules()
     {
         $rules = [
-            'name' => 'required|unique:modules,name,' . $this->entity->id,
+            'name' => 'required|unique:modules,name,'.$this->entity->id,
 
         ];
 
