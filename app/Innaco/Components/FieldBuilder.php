@@ -1,11 +1,13 @@
-<?php namespace Innaco\Components;
+<?php
+
+namespace Innaco\Components;
 
 use Illuminate\Html\FormBuilder as Form;
-use Illuminate\View\Factory as View;
 use Illuminate\Session\Store as Session;
+use Illuminate\View\Factory as View;
 
-class FieldBuilder {
-
+class FieldBuilder
+{
     protected $form;
     protected $view;
     protected $session;
@@ -13,7 +15,7 @@ class FieldBuilder {
     protected $defaultClass = [
         'default'  => 'form-control',
         'textarea' => 'form-control',
-        'checkbox' => ''
+        'checkbox' => '',
     ];
 
     public function __construct(Form $form, View $view, Session $session)
@@ -25,8 +27,7 @@ class FieldBuilder {
 
     public function getDefaultClass($type)
     {
-        if (isset ($this->defaultClass[$type]))
-        {
+        if (isset($this->defaultClass[$type])) {
             return $this->defaultClass[$type];
         }
 
@@ -37,36 +38,30 @@ class FieldBuilder {
     {
         $defaultClasses = $this->getDefaultClass($type);
 
-        if (isset ($attributes['class']))
-        {
-            $attributes['class'] .= ' ' . $defaultClasses;
-        }
-        else
-        {
+        if (isset($attributes['class'])) {
+            $attributes['class'] .= ' '.$defaultClasses;
+        } else {
             $attributes['class'] = $defaultClasses;
         }
     }
 
     public function buildLabel($name)
     {
-        if (\Lang::has('validation.attributes.' . $name))
-        {
-            $label = \Lang::get('validation.attributes.' . $name);
-        }
-        else
-        {
+        if (\Lang::has('validation.attributes.'.$name)) {
+            $label = \Lang::get('validation.attributes.'.$name);
+        } else {
             $label = str_replace('_', ' ', $name);
         }
 
         return ucfirst($label);
     }
 
-    public function buildControl($type, $name, $value = null, $attributes = array(), $options = array())
+    public function buildControl($type, $name, $value = null, $attributes = [], $options = [])
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'select':
-                $options = array('' => 'Seleccione') + $options;
+                $options = ['' => 'Seleccione'] + $options;
+
                 return $this->form->select($name, $options, $value, $attributes);
             case 'password':
                 return $this->form->password($name, $attributes);
@@ -75,7 +70,7 @@ class FieldBuilder {
             case 'textarea':
                 return $this->form->textarea($name, $value, $attributes);
             case 'datepicker':
-                return $this->form->input('text',$name,$value,$attributes);
+                return $this->form->input('text', $name, $value, $attributes);
             default:
                 return $this->form->input($type, $name, $value, $attributes);
         }
@@ -84,29 +79,27 @@ class FieldBuilder {
     public function buildError($name)
     {
         $error = null;
-        if ($this->session->has('errors'))
-        {
+        if ($this->session->has('errors')) {
             $errors = $this->session->get('errors');
 
-            if ($errors->has($name))
-            {
+            if ($errors->has($name)) {
                 $error = $errors->first($name);
             }
         }
+
         return $error;
     }
 
     public function buildTemplate($type)
     {
-        if (\View::exists('fields.' . $type))
-        {
-            return 'fields/' . $type;
+        if (\View::exists('fields.'.$type)) {
+            return 'fields/'.$type;
         }
 
         return 'fields/default';
     }
 
-    public function input($type, $name, $value = null, $attributes = array(), $options = array())
+    public function input($type, $name, $value = null, $attributes = [], $options = [])
     {
         $this->buildCssClasses($type, $attributes);
         $label = $this->buildLabel($name);
@@ -114,15 +107,15 @@ class FieldBuilder {
         $error = $this->buildError($name);
         $template = $this->buildTemplate($type);
 
-        return $this->view->make($template, compact ('name', 'label', 'control', 'error'));
+        return $this->view->make($template, compact('name', 'label', 'control', 'error'));
     }
 
-    public function password($name, $attributes = array())
+    public function password($name, $attributes = [])
     {
         return $this->input('password', $name, null, $attributes);
     }
 
-    public function select($name, $options, $value = null, $attributes = array())
+    public function select($name, $options, $value = null, $attributes = [])
     {
         return $this->input('select', $name, $value, $attributes, $options);
     }
@@ -130,6 +123,7 @@ class FieldBuilder {
     public function __call($method, $params)
     {
         array_unshift($params, $method);
+
         return call_user_func_array([$this, 'input'], $params);
     }
 }

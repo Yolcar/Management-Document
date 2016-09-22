@@ -1,7 +1,9 @@
-<?php namespace Innaco\Managers;
+<?php
 
-class StepDocumentManager extends BaseManager{
+namespace Innaco\Managers;
 
+class StepDocumentManager extends BaseManager
+{
     public function getRules()
     {
         $rules = [
@@ -10,7 +12,7 @@ class StepDocumentManager extends BaseManager{
             'groups_id'     => 'required',
             'order'         => 'required',
             'available'     => '',
-            'edit'          => ''
+            'edit'          => '',
         ];
 
         return $rules;

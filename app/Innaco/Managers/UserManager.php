@@ -1,16 +1,18 @@
-<?php namespace Innaco\Managers;
+<?php
 
-class UserManager extends BaseManager{
+namespace Innaco\Managers;
 
+class UserManager extends BaseManager
+{
     public function getRules()
     {
         $rules = [
-            'full_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $this->entity->id,
-            'cedula' => 'required|unique:users,cedula,'. $this->entity->id,
-            'password' => 'confirmed',
+            'full_name'             => 'required',
+            'email'                 => 'required|email|unique:users,email,'.$this->entity->id,
+            'cedula'                => 'required|unique:users,cedula,'.$this->entity->id,
+            'password'              => 'confirmed',
             'password_confirmation' => '',
-            'available' => ''
+            'available'             => '',
         ];
 
         return $rules;

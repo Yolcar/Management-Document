@@ -1,8 +1,11 @@
-<?php namespace Innaco\Repositories;
+<?php
+
+namespace Innaco\Repositories;
+
 use Innaco\Entities\TypeDocument;
 
-class TypeDocumentRepo extends BaseRepo {
-
+class TypeDocumentRepo extends BaseRepo
+{
     public function getModel()
     {
         return new typeDocument();
@@ -11,7 +14,7 @@ class TypeDocumentRepo extends BaseRepo {
     public function newTypeDocument()
     {
         $typeDocument = new typeDocument();
+
         return $typeDocument;
     }
-
 }

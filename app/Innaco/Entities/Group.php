@@ -1,24 +1,27 @@
-<?php namespace Innaco\Entities;
+<?php
+
+namespace Innaco\Entities;
 
 /**
- * Innaco\Entities\Group
+ * Innaco\Entities\Group.
  *
- * @property integer $id 
- * @property string $name 
- * @property boolean $available 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\User[] $users 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\StepDocument[] $stepDocuments 
+ * @property int $id
+ * @property string $name
+ * @property bool $available
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\User[] $users
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Innaco\Entities\StepDocument[] $stepDocuments
+ *
  * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereAvailable($value)
  * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Innaco\Entities\Group whereUpdatedAt($value)
  */
-class Group extends \Eloquent {
-
-	protected $fillable = ['name','available'];
+class Group extends \Eloquent
+{
+    protected $fillable = ['name', 'available'];
 
     public function users()
     {
@@ -27,6 +30,6 @@ class Group extends \Eloquent {
 
     public function stepDocuments()
     {
-        return $this->hasMany('Innaco\Entities\StepDocument','groups_id','id');
+        return $this->hasMany('Innaco\Entities\StepDocument', 'groups_id', 'id');
     }
 }

@@ -11,15 +11,13 @@
 |
 */
 
-App::before(function($request)
-{
-	//
+App::before(function ($request) {
+    //
 });
 
 
-App::after(function($request, $response)
-{
-	//
+App::after(function ($request, $response) {
+    //
 });
 
 /*
@@ -33,62 +31,55 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
-{
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
-			return Response::make('Unauthorized', 401);
-		}
-		else
-		{
-			return Redirect::guest('login');
-		}
-	}
+Route::filter('auth', function () {
+    if (Auth::guest()) {
+        if (Request::ajax()) {
+            return Response::make('Unauthorized', 401);
+        } else {
+            return Redirect::guest('login');
+        }
+    }
 });
 
-Route::filter('Authenticate', function()
-{
-    if(Auth::check()){
-        if(Auth::user()->available != 0){
-            if(Session::getId() != Auth::user()->last_session){
+Route::filter('Authenticate', function () {
+    if (Auth::check()) {
+        if (Auth::user()->available != 0) {
+            if (Session::getId() != Auth::user()->last_session) {
                 Auth::logout();
+
                 return Redirect::to('login');
             }
-        }else{
+        } else {
             Auth::logout();
+
             return Redirect::to('login');
         }
-    }else{
+    } else {
         return Redirect::to('login');
     }
 });
 
-Route::filter('isManagement', function()
-{
-    if(Auth::getUser()->hasGroup(Config::get('custom.group_management.name')) == false){
-        return Response::view('errors.missing', array(), 404);
+Route::filter('isManagement', function () {
+    if (Auth::getUser()->hasGroup(Config::get('custom.group_management.name')) == false) {
+        return Response::view('errors.missing', [], 404);
     }
 });
 
-Route::filter('haveGroupsAcl', function($route, $request, $value)
-{
+Route::filter('haveGroupsAcl', function ($route, $request, $value) {
     $groupsAcl = Auth::getUser()->groupacls;
     $flag = false;
-    foreach($groupsAcl as $groupAcl){
-        if(\Innaco\Entities\Groupacl::find($groupAcl->id)->hasModule($value)){
+    foreach ($groupsAcl as $groupAcl) {
+        if (\Innaco\Entities\Groupacl::find($groupAcl->id)->hasModule($value)) {
             $flag = true;
         }
     }
-    if(!$flag){
-        return Response::view('errors.missing', array(), 404);
+    if (!$flag) {
+        return Response::view('errors.missing', [], 404);
     }
 });
 
-Route::filter('auth.basic', function()
-{
-	return Auth::basic();
+Route::filter('auth.basic', function () {
+    return Auth::basic();
 });
 
 /*
@@ -102,9 +93,10 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
-{
-	if (Auth::check()) return Redirect::to('/');
+Route::filter('guest', function () {
+    if (Auth::check()) {
+        return Redirect::to('/');
+    }
 });
 
 /*
@@ -118,10 +110,8 @@ Route::filter('guest', function()
 |
 */
 
-Route::filter('csrf', function()
-{
-	if (Session::token() !== Input::get('_token'))
-	{
-		throw new Illuminate\Session\TokenMismatchException;
-	}
+Route::filter('csrf', function () {
+    if (Session::token() !== Input::get('_token')) {
+        throw new Illuminate\Session\TokenMismatchException();
+    }
 });

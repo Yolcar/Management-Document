@@ -2,22 +2,21 @@
 
 use Innaco\Entities\State;
 
-class StateTableSeeder extends Seeder {
-
+class StateTableSeeder extends Seeder
+{
     public function run()
     {
         State::create([
-            'name'	=> 'No Disponible',
+            'name'    => 'No Disponible',
         ]);
         State::create([
-            'name'	=> 'Pendiente',
+            'name'    => 'Pendiente',
         ]);
         State::create([
-            'name'	=> 'Listo',
+            'name'    => 'Listo',
         ]);
         State::create([
-            'name'	=> 'Rechazado',
+            'name'    => 'Rechazado',
         ]);
     }
-
 }

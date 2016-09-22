@@ -1,10 +1,11 @@
 <?php
+
 use \Innaco\Entities\Module;
 
-class ModulesTableSeeder extends Seeder {
-
-	public function run()
-	{
+class ModulesTableSeeder extends Seeder
+{
+    public function run()
+    {
         Module::create([
             'name'      => 'Documentos',
         ]);
@@ -34,9 +35,7 @@ class ModulesTableSeeder extends Seeder {
         ]);
 
         Module::create([
-            'name'      => 'Grupos Funcionales'
+            'name'      => 'Grupos Funcionales',
         ]);
-
-	}
-
+    }
 }

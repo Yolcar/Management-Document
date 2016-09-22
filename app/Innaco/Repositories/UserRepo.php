@@ -1,8 +1,11 @@
-<?php namespace Innaco\Repositories;
+<?php
+
+namespace Innaco\Repositories;
+
 use Innaco\Entities\User;
 
-class UserRepo extends BaseRepo {
-
+class UserRepo extends BaseRepo
+{
     public function getModel()
     {
         return new user();
@@ -11,6 +14,7 @@ class UserRepo extends BaseRepo {
     public function newUser()
     {
         $user = new user();
+
         return $user;
     }
 }

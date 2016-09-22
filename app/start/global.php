@@ -2,6 +2,7 @@
 
 use \Illuminate\Database\Eloquent\ModelNotFoundException;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader
@@ -13,14 +14,14 @@ use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 |
 */
 
-ClassLoader::addDirectories(array(
+ClassLoader::addDirectories([
 
-	app_path().'/commands',
-	app_path().'/controllers',
-	app_path().'/models',
-	app_path().'/database/seeds',
+    app_path().'/commands',
+    app_path().'/controllers',
+    app_path().'/models',
+    app_path().'/database/seeds',
 
-));
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -48,23 +49,20 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 |
 */
 
-App::error(function(Exception $exception)
-{
-	Log::error($exception);
+App::error(function (Exception $exception) {
+    Log::error($exception);
 });
 
 App::error(function (\Innaco\Managers\ValidationException $exception) {
-	return Redirect::back()->withInput()->withErrors($exception->getErrors());
+    return Redirect::back()->withInput()->withErrors($exception->getErrors());
 });
 
-App::error(function(ModelNotFoundException $e)
-{
-	return Response::view('errors.missing', array(), 404);
+App::error(function (ModelNotFoundException $e) {
+    return Response::view('errors.missing', [], 404);
 });
 
-App::error(function(NotFoundHttpException  $e)
-{
-    return Response::view('errors.missing', array(), 404);
+App::error(function (NotFoundHttpException  $e) {
+    return Response::view('errors.missing', [], 404);
 });
 
 
@@ -79,9 +77,8 @@ App::error(function(NotFoundHttpException  $e)
 |
 */
 
-App::down(function()
-{
-	return Response::make("Be right back!", 503);
+App::down(function () {
+    return Response::make('Be right back!', 503);
 });
 
 /*

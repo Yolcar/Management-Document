@@ -1,15 +1,16 @@
-<?php namespace Innaco\Managers;
+<?php
 
+namespace Innaco\Managers;
 
-abstract class BaseManager {
-
+abstract class BaseManager
+{
     protected $entity;
     protected $data;
 
     public function __construct($entity, $data)
     {
         $this->entity = $entity;
-        $this->data   = array_only($data, array_keys($this->getRules()));
+        $this->data = array_only($data, array_keys($this->getRules()));
     }
 
     abstract public function getRules();
@@ -20,8 +21,7 @@ abstract class BaseManager {
 
         $validation = \Validator::make($this->data, $rules);
 
-        if ($validation->fails())
-        {
+        if ($validation->fails()) {
             throw new ValidationException('Validation failed', $validation->messages());
         }
     }
@@ -44,5 +44,4 @@ abstract class BaseManager {
     {
         $this->entity->delete();
     }
-
 }

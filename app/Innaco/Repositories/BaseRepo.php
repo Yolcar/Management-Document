@@ -1,8 +1,9 @@
-<?php namespace Innaco\Repositories;
+<?php
 
+namespace Innaco\Repositories;
 
-abstract class BaseRepo {
-
+abstract class BaseRepo
+{
     protected $model;
 
     public function __construct()
@@ -17,16 +18,15 @@ abstract class BaseRepo {
 
     public function findAll($paginate = false)
     {
-        if($paginate)
-        {
+        if ($paginate) {
             return $this->model->paginate(20);
         }
+
         return $this->model->get();
     }
 
-    public function destroy($id,$column)
+    public function destroy($id, $column)
     {
-        return $this->model->where($column,'=',$id)->delete();
+        return $this->model->where($column, '=', $id)->delete();
     }
-
 }
